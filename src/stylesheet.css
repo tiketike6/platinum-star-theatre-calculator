@@ -41,7 +41,7 @@ button:disabled {
 .addTicketLiveTimes,
 .addLiveTimes,
 .addEventTimes {
-    background: linear-gradient(to right, rgb(255, 128, 128), rgb(225,64, 64));
+    background: linear-gradient(to right, rgb(255, 128, 128), rgb(225, 64, 64));
     color: rgb(255, 255, 255);
     padding: 0;
     width: 2em;

@@ -445,7 +445,7 @@
                     ` name="workStaminaCost${course}"` +
                     ` id="workStaminaCost${course}-${cost}"` +
                     ` value="${cost}" />` +
-                    ` [×${cost}] ${text}` +
+                    ` [${cost}] ${text}` +
                     `</label>`;
             });
 

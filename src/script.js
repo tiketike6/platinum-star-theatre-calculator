@@ -163,7 +163,7 @@
 
     // ログインボーナスを考慮
     function calculateLoginBonus(formValue) {
-        const loginBonusPerDay = 360;
+        const loginBonusPerDay = 540;
         let loginBonus = dayjs.unix(formValue.datetimeEndUnix).endOf('d').diff(dayjs.unix(formValue.nowUnix), 'd') * loginBonusPerDay;
         if (formValue.isFuture) {
             loginBonus += loginBonusPerDay;
@@ -471,9 +471,9 @@
         function showResultText(field, minValue, unit, isLink) {
             let text = minValue;
             if (isLink) {
-                text = `<a href="../event-jewels-calculator/index.html?datetimeStart=${formValue.datetimeStart}&datetimeEnd=${
-                    formValue.datetimeEnd
-                }&consumedStamina=${minValue}&stamina=${formValue.stamina}">${minValue.toLocaleString()}</a>`;
+                text =
+                    `<a href="../event-jewels-calculator/index.html?datetimeStart=${formValue.datetimeStart}&datetimeEnd=${formValue.datetimeEnd}&` +
+                    `consumedStamina=${minResult[course].consumedStamina}&stamina=${formValue.stamina}">${minValue}</a>`;
             }
             if (unit) {
                 text += ` ${unit}`;

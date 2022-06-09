@@ -30,36 +30,24 @@ button:disabled {
     color: rgb(128, 128, 128);
     cursor: not-allowed;
 }
-.subtractWorkTimes,
-.subtractTicketLiveTimes,
-.subtractLiveTimes,
-.subtractEventTimes {
+.beforePlay {
     padding: 0;
     width: 2em;
 }
-.addWorkTimes,
-.addTicketLiveTimes,
-.addLiveTimes,
-.addEventTimes {
+.afterPlay {
     background: linear-gradient(to right, rgb(255, 128, 128), rgb(225, 64, 64));
     color: rgb(255, 255, 255);
     padding: 0;
     width: 2em;
 }
-.addWorkTimes:hover,
-.addTicketLiveTimes:hover,
-.addLiveTimes:hover,
-.addEventTimes:hover {
-    background: linear-gradient(to right, rgb(255, 128, 128), rgb(255, 128, 160));
+.afterPlay:hover {
+    background: linear-gradient(to right, rgb(255, 128, 128), rgb(255, 128, 128));
 }
-.addWorkTimes:active,
-.addTicketLiveTimes:active,
-.addLiveTimes:active,
-.addEventTimes:active {
+.afterPlay:active {
     background: linear-gradient(to right, rgb(224, 96, 96), rgb(192, 32, 32));
 }
 input[type='checkbox'] {
-    accent-color: rgb(225, 80, 80);
+    accent-color: rgb(225, 64, 96);
 }
 input[type='radio'] {
     accent-color: rgb(224, 192, 128);
@@ -87,34 +75,19 @@ table.solid td {
     position: relative;
     top: -7px;
 }
-._2m,
-._2m_push,
-._2m_live,
-._2m_work {
+._2m {
     background-color: rgba(128, 255, 0, 0.125);
 }
-._4m,
-._4m_push,
-._4m_live,
-._4m_work {
+._4m {
     background-color: rgba(0, 128, 255, 0.125);
 }
-._2p,
-._2p_push,
-._2p_live,
-._2p_work {
+._2p {
     background-color: rgba(255, 0, 128, 0.125);
 }
-._6m,
-._6m_push,
-._6m_live,
-._6m_work {
+._6m {
     background-color: rgba(255, 0, 0, 0.125);
 }
-._mm,
-._mm_push,
-._mm_live,
-._mm_work {
+._mm {
     background-color: rgba(128, 0, 255, 0.125);
 }
 .times {
@@ -136,4 +109,22 @@ table.solid td {
 }
 .danger {
     color: rgb(255, 0, 0);
+}
+.vertical {
+    writing-mode: vertical-rl;
+    vertical-align: middle;
+}
+.cgBackground {
+    background-color: rgb(0, 128, 192);
+    color: rgb(255, 255, 255);
+}
+.cgColor {
+    color: rgb(0, 128, 192);
+}
+.mlBackground {
+    background-color: rgb(255, 192, 0);
+    color: rgb(255, 255, 255);
+}
+.mlColor {
+    color: rgb(255, 192, 0);
 }

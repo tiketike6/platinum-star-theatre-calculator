@@ -60,22 +60,22 @@
         }
         validDateTime('datetimeStart');
         validDateTime('datetimeEnd');
+        validDateTime('now');
 
-        formValue.endOfTodayUnix = dayjs().endOf('d').unix();
-        if (formValue.endOfTodayUnix < formValue.datetimeStartUnix) {
-            formValue.endOfTodayUnix = formValue.datetimeStartUnix;
-        }
-        if (formValue.endOfTodayUnix > formValue.datetimeEndUnix) {
-            formValue.endOfTodayUnix = formValue.datetimeEndUnix;
-        }
-
-        formValue.nowUnix = dayjs().endOf('m').unix();
         if (formValue.nowUnix < formValue.datetimeStartUnix) {
             formValue.nowUnix = formValue.datetimeStartUnix;
             formValue.isFuture = true;
         }
         if (formValue.nowUnix > formValue.datetimeEndUnix) {
             formValue.nowUnix = formValue.datetimeEndUnix;
+        }
+
+        formValue.endOfTodayUnix = dayjs(formValue.now).endOf('d').unix();
+        if (formValue.endOfTodayUnix < formValue.datetimeStartUnix) {
+            formValue.endOfTodayUnix = formValue.datetimeStartUnix;
+        }
+        if (formValue.endOfTodayUnix > formValue.datetimeEndUnix) {
+            formValue.endOfTodayUnix = formValue.datetimeEndUnix;
         }
 
         function validSafeInteger(field) {
@@ -137,7 +137,7 @@
         }
         $('#diffEnd').text(`(あと ${diffEnd.toLocaleString()} pt)`);
 
-        $('#labelToday').text(`${dayjs.unix(formValue.endOfTodayUnix).format('M/D')}の目標pt`);
+        $('#labelToday').text(`${dayjs.unix(formValue.endOfTodayUnix).format('M/D')}の目標`);
 
         const targetToday = Math.round(
             (formValue.targetEnd * (formValue.endOfTodayUnix - formValue.datetimeStartUnix)) /
@@ -149,7 +149,7 @@
         }
         $('#targetToday').text(`${targetToday.toLocaleString()} pt (あと ${diffToday.toLocaleString()} pt)`);
 
-        $('#labelNow').text(`${dayjs.unix(formValue.nowUnix).format('M/D H:mm')}の目標pt`);
+        $('#labelNow').text(`${dayjs.unix(formValue.nowUnix).format('M/D H:mm')}の目標`);
 
         const targetNow = Math.round(
             (formValue.targetEnd * (formValue.nowUnix - formValue.datetimeStartUnix)) / (formValue.datetimeEndUnix - formValue.datetimeStartUnix)
@@ -400,12 +400,12 @@
             result[course].requiredTime += '0分';
         }
 
-        // 消費元気、所要時間の最小値を格納
-        if (minCost.consumedStamina === undefined || minCost.consumedStamina > result[course].consumedStamina) {
-            minCost.consumedStamina = result[course].consumedStamina;
-        }
+        // 所要時間、要回復元気の最小値を格納
         if (minCost.requiredMinutes === undefined || minCost.requiredMinutes > result[course].requiredMinutes) {
             minCost.requiredMinutes = result[course].requiredMinutes;
+        }
+        if (minCost.requiredRecoveryStamina === undefined || minCost.requiredRecoveryStamina > result[course].requiredRecoveryStamina) {
+            minCost.requiredRecoveryStamina = result[course].requiredRecoveryStamina;
         }
     }
 
@@ -482,9 +482,9 @@
         }
         showResultText('workTimes', workTimesHtml);
         showResultText('liveTimes', minResult[course].liveTimes);
-        showResultText('consumedStamina', minResult[course].consumedStamina.toLocaleString());
+        showResultText('consumedStamina', minResult[course].consumedStamina.toLocaleString(), false, true);
         showResultText('naturalRecoveryAt', dayjs.unix(minResult[course].naturalRecoveryUnix).format('M/D H:mm'));
-        showResultText('requiredRecoveryStamina', minResult[course].requiredRecoveryStamina.toLocaleString(), false, true);
+        showResultText('requiredRecoveryStamina', minResult[course].requiredRecoveryStamina.toLocaleString());
         showResultText('consumedLiveTickets', minResult[course].consumedLiveTickets.toLocaleString(), '枚');
         showResultText('liveEarnedPoints', minResult[course].liveEarnedPoints.toLocaleString(), 'pt');
 
@@ -506,16 +506,16 @@
             }) || formValue.itemsCostMultiplier;
         $(`[name="itemsCostMultiplier${course}"][value="${itemsCostMultiplier}"]`).prop('checked', true);
 
-        // 消費元気、所要時間の最小値は青文字
-        if (formValue.showCourse.length !== 1 && minResult[course].consumedStamina === minCost.consumedStamina) {
-            $(`#consumedStamina${course}`).addClass('info');
-        } else {
-            $(`#consumedStamina${course}`).removeClass('info');
-        }
+        // 所要時間、要回復元気の最小値は青文字
         if (formValue.showCourse.length !== 1 && minResult[course].requiredMinutes === minCost.requiredMinutes) {
             $(`#requiredTime${course}`).addClass('info');
         } else {
             $(`#requiredTime${course}`).removeClass('info');
+        }
+        if (formValue.showCourse.length !== 1 && minResult[course].requiredRecoveryStamina === minCost.requiredRecoveryStamina) {
+            $(`#requiredRecoveryStamina${course}`).addClass('info');
+        } else {
+            $(`#requiredRecoveryStamina${course}`).removeClass('info');
         }
 
         // 開催期限をオーバーする場合、赤文字
@@ -542,16 +542,16 @@
         });
 
         // 表示
-        $('._2m').prop('colspan', 2);
-        $('._4m').prop('colspan', 2);
-        $('._2p').prop('colspan', 2);
-        $('._6m').prop('colspan', 2);
-        $('._mm').prop('colspan', 2);
-        $('._2m').show();
-        $('._4m').show();
-        $('._2p').show();
-        $('._6m').show();
-        $('._mm').show();
+        $('._2m_header').prop('colspan', 2);
+        $('._4m_header').prop('colspan', 2);
+        $('._2p_header').prop('colspan', 2);
+        $('._6m_header').prop('colspan', 2);
+        $('._mm_header').prop('colspan', 2);
+        $('._2m_header').show();
+        $('._4m_header').show();
+        $('._2p_header').show();
+        $('._6m_header').show();
+        $('._mm_header').show();
         Object.keys(staminaCost).forEach((course) => {
             showResultByCouse(course, formValue, minResult, minCost);
         });
@@ -564,6 +564,8 @@
             datetimeStart: $('#datetimeStart').val(),
             datetimeEnd: $('#datetimeEnd').val(),
             targetEnd: $('#targetEnd').val(),
+            now: $('#now').val(),
+            isNow: $('#isNow').prop('checked'),
             stamina: $('#stamina').val(),
             liveTickets: $('#liveTickets').val(),
             ownPoints: $('#ownPoints').val(),
@@ -603,6 +605,19 @@
     $('#datetimeStart').change(calculate);
     $('#datetimeEnd').change(calculate);
     $('#targetEnd').change(calculate);
+    $('#now').change(() => {
+        $('#isNow').prop('checked', true);
+        if ($('#now').val() !== dayjs().format('YYYY-MM-DDTHH:mm')) {
+            $('#isNow').prop('checked', false);
+        }
+        calculate();
+    });
+    $('#isNow').change(() => {
+        if ($('#isNow').prop('checked')) {
+            $('#now').val(dayjs().format('YYYY-MM-DDTHH:mm'));
+        }
+        calculate();
+    });
     $('#stamina').change(calculate);
     $('#liveTickets').change(calculate);
     $('#ownItems').change(calculate);
@@ -631,7 +646,7 @@
     $('#autoSave').change(calculate);
 
     // 回数増減ボタン
-    $('.subtractWorkTimes').click(function () {
+    $('.beforePlayWork').click(function () {
         // eslint-disable-next-line no-invalid-this
         const course = $(this).val();
         const formValue = getFormValue();
@@ -641,7 +656,7 @@
 
         calculate();
     });
-    $('.addWorkTimes').click(function () {
+    $('.afterPlayWork').click(function () {
         // eslint-disable-next-line no-invalid-this
         const course = $(this).val();
         const formValue = getFormValue();
@@ -666,7 +681,7 @@
 
         calculate();
     });
-    $('.subtractTicketLiveTimes').click(function () {
+    $('.beforePlayTicketLive').click(function () {
         // eslint-disable-next-line no-invalid-this
         const course = $(this).val();
         const formValue = getFormValue();
@@ -677,7 +692,7 @@
 
         calculate();
     });
-    $('.addTicketLiveTimes').click(function () {
+    $('.afterPlayTicketLive').click(function () {
         // eslint-disable-next-line no-invalid-this
         const course = $(this).val();
         const formValue = getFormValue();
@@ -688,7 +703,7 @@
 
         calculate();
     });
-    $('.subtractLiveTimes').click(function () {
+    $('.beforePlayLive').click(function () {
         // eslint-disable-next-line no-invalid-this
         const course = $(this).val();
         const formValue = getFormValue();
@@ -699,7 +714,7 @@
 
         calculate();
     });
-    $('.addLiveTimes').click(function () {
+    $('.afterPlayLive').click(function () {
         // eslint-disable-next-line no-invalid-this
         const course = $(this).val();
         const formValue = getFormValue();
@@ -710,7 +725,7 @@
 
         calculate();
     });
-    $('.subtractEventTimes').click(function () {
+    $('.beforePlayEvent').click(function () {
         // eslint-disable-next-line no-invalid-this
         const course = $(this).val();
         const formValue = getFormValue();
@@ -721,7 +736,7 @@
 
         calculate();
     });
-    $('.addEventTimes').click(function () {
+    $('.afterPlayEvent').click(function () {
         // eslint-disable-next-line no-invalid-this
         const course = $(this).val();
         const formValue = getFormValue();
@@ -741,6 +756,8 @@
         $('#datetimeStart').val(dayjs().subtract(15, 'h').format('YYYY-MM-DDT15:00'));
         $('#datetimeEnd').val(dayjs().subtract(15, 'h').add(1, 'w').format('YYYY-MM-DDT20:59'));
         $('#targetEnd').val(30000);
+        $('#now').val(dayjs().format('YYYY-MM-DDTHH:mm'));
+        $('#isNow').prop('checked', true);
         $('#stamina').val(0);
         $('#liveTickets').val(0);
         $('#ownPoints').val(0);
@@ -749,7 +766,7 @@
         $('[name="workStaminaCost"][value="20"]').prop('checked', true);
         $('[name="staminaCostMultiplier"][value="1"]').prop('checked', true);
         $('#ticketCostMultiplier').val(10);
-        $('[name="itemsCostMultiplier"][value="2"]').prop('checked', true);
+        $('[name="itemsCostMultiplier"][value="1"]').prop('checked', true);
         $('[name="showCourse"]').each((i) => {
             if (
                 ['_2m_live', '_2m_work', '_4m_live', '_4m_work', '_2p_live', '_2p_work', '_6m_live', '_6m_work', '_mm_live', '_mm_work'].indexOf(
@@ -781,6 +798,8 @@
         $('#datetimeStart').val(savedData.datetimeStart);
         $('#datetimeEnd').val(savedData.datetimeEnd);
         $('#targetEnd').val(savedData.targetEnd);
+        $('#now').val(savedData.now);
+        $('#isNow').prop('checked', savedData.isNow);
         $('#stamina').val(savedData.stamina);
         $('#liveTickets').val(savedData.liveTickets);
         $('#ownPoints').val(savedData.ownPoints);

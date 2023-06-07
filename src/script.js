@@ -41,6 +41,11 @@
         const formValue = {};
         const errors = [];
 
+        if ($('#isNow').prop('checked')) {
+            $('#now').val(dayjs().format('YYYY-MM-DDTHH:mm'));
+            formValue.isNow = true;
+        }
+
         function validDateTime(field) {
             const inputValue = $(`#${field}`).val();
             if (!inputValue) {
@@ -612,12 +617,7 @@
         }
         calculate();
     });
-    $('#isNow').change(() => {
-        if ($('#isNow').prop('checked')) {
-            $('#now').val(dayjs().format('YYYY-MM-DDTHH:mm'));
-        }
-        calculate();
-    });
+    $('#isNow').change(calculate);
     $('#stamina').change(calculate);
     $('#liveTickets').change(calculate);
     $('#ownItems').change(calculate);

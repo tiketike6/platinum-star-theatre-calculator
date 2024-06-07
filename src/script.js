@@ -254,18 +254,22 @@
 
         // ミッションを考慮したイベント楽曲回数を計算
         function calculateEventTimesForMission() {
-            const maxTimesOf4 = formValue.itemsCostMultiplier >= 4 ? Math.floor(eventTimes / 4) : 0;
-            for (let timesOf4 = maxTimesOf4; timesOf4 >= 0; timesOf4--) {
-                const maxTimesOf2 = formValue.itemsCostMultiplier >= 2 ? Math.floor((eventTimes - timesOf4 * 4) / 2) : 0;
-                for (let timesOf2 = maxTimesOf2; timesOf2 >= 0; timesOf2--) {
-                    const timesOf1 = eventTimes - timesOf4 * 4 - timesOf2 * 2;
-                    if (timesOf4 + timesOf2 + timesOf1 >= formValue.mission) {
-                        // 合計がミッション回数以上なら達成可能
-                        return {
-                            1: timesOf1,
-                            2: timesOf2,
-                            4: timesOf4,
-                        };
+            const maxTimesOf10 = formValue.itemsCostMultiplier >= 10 ? Math.floor(eventTimes / 10) : 0;
+            for (let timesOf10 = maxTimesOf10; timesOf10 >= 0; timesOf10--) {
+                const maxTimesOf4 = formValue.itemsCostMultiplier >= 4 ? Math.floor((eventTimes - timesOf10 * 10) / 4) : 0;
+                for (let timesOf4 = maxTimesOf4; timesOf4 >= 0; timesOf4--) {
+                    const maxTimesOf2 = formValue.itemsCostMultiplier >= 2 ? Math.floor((eventTimes - timesOf10 * 10 - timesOf4 * 4) / 2) : 0;
+                    for (let timesOf2 = maxTimesOf2; timesOf2 >= 0; timesOf2--) {
+                        const timesOf1 = eventTimes - timesOf10 * 10 - timesOf4 * 4 - timesOf2 * 2;
+                        if (timesOf10 + timesOf4 + timesOf2 + timesOf1 >= formValue.mission) {
+                            // 合計がミッション回数以上なら達成可能
+                            return {
+                                1: timesOf1,
+                                2: timesOf2,
+                                4: timesOf4,
+                                10: timesOf10,
+                            };
+                        }
                     }
                 }
             }
@@ -273,6 +277,7 @@
                 1: eventTimes,
                 2: 0,
                 4: 0,
+                10: 0,
             };
         }
         const fixedEventTimes = calculateEventTimesForMission();
@@ -350,7 +355,7 @@
                 requiredMinutes += 3 * Math.ceil(liveTimes / formValue.staminaCostMultiplier);
             }
             // イベント楽曲
-            requiredMinutes += 3 * (fixedEventTimes[1] + fixedEventTimes[2] + fixedEventTimes[4]);
+            requiredMinutes += 3 * (fixedEventTimes[1] + fixedEventTimes[2] + fixedEventTimes[4] + fixedEventTimes[10]);
             return requiredMinutes;
         }
         const requiredMinutes = calculateRequiredMinutes();
@@ -455,7 +460,7 @@
             });
 
         let eventTimesHtml = '';
-        [1, 2, 4]
+        [1, 2, 4, 10]
             .filter((multiplier) => {
                 return minResult[course].eventTimes[multiplier] || multiplier === formValue.itemsCostMultiplier;
             })
@@ -506,7 +511,7 @@
             }) || formValue.workStaminaCost;
         $(`[name="workStaminaCost${course}"][value="${workStaminaCost}"]`).prop('checked', true);
         const itemsCostMultiplier =
-            [4, 2, 1].find((multiplier) => {
+            [10, 4, 2, 1].find((multiplier) => {
                 return minResult[course].eventTimes[multiplier];
             }) || formValue.itemsCostMultiplier;
         $(`[name="itemsCostMultiplier${course}"][value="${itemsCostMultiplier}"]`).prop('checked', true);

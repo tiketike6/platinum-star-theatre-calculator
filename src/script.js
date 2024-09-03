@@ -31,10 +31,12 @@
         _mm_live: 85,
         _mm_work: 85 * 0.7,
     };
+    // Object.keys(points).forEach((p) => (points[p] *= 1.2));
 
     // イベント楽曲の設定
     const consumedItemPerEvent = 180;
     const earnPointPerEvent = 634;
+    // const earnPointPerEvent = 537; // 周年
     const bonusPointPerEvent = 3000;
 
     // ログインボーナスの設定
@@ -208,7 +210,7 @@
 
         const isWork = course.indexOf('work') !== -1;
 
-        let myItem = formValue.myItem + formValue.loginBonus + formValue.itemExchange_1 * 180;
+        let myItem = formValue.myItem + formValue.loginBonus + formValue.itemExchange_2 * 180;
         const missions = formValue.missions.concat();
         let remainingBonus = formValue.remainingBonus + formValue.itemExchange_1;
 
@@ -334,92 +336,140 @@
             if (!isWork) {
                 return {
                     consumedStamina: consumedStaminaByLive + consumedStaminaByWork,
-                    20: { 1: 0, 2: 0 },
-                    25: { 1: 0, 2: 0 },
-                    30: { 1: 0, 2: 0 },
+                    20: { 1: 0, 2: 0, 3: 0 },
+                    25: { 1: 0, 2: 0, 3: 0 },
+                    30: { 1: 0, 2: 0, 3: 0 },
                 };
             }
             const workTimes = {
                 consumedStamina: Math.ceil(consumedStaminaByWork / formValue.workStaminaCost) * formValue.workStaminaCost,
-                20: { 1: 0, 2: 0 },
-                25: { 1: 0, 2: 0 },
-                30: { 1: 0, 2: 0 },
+                20: { 1: 0, 2: 0, 3: 0 },
+                25: { 1: 0, 2: 0, 3: 0 },
+                30: { 1: 0, 2: 0, 3: 0 },
             };
             workTimes[formValue.workStaminaCost][1] = Math.ceil(consumedStaminaByWork / formValue.workStaminaCost);
             const workStaminaCost = [20, 25, 30].filter((cost) => cost !== formValue.workStaminaCost);
 
-            const maxTimesOfSelected_2 =
-                formValue.staminaCostMultiplier >= 2 ? Math.floor(Math.ceil(consumedStaminaByWork / formValue.workStaminaCost) / 2) : 0;
-            for (let timesOfSelected_2 = maxTimesOfSelected_2; timesOfSelected_2 >= 0; timesOfSelected_2--) {
-                const maxTimesOf0_2 =
-                    formValue.staminaCostMultiplier >= 2
-                        ? Math.floor(Math.ceil((consumedStaminaByWork - timesOfSelected_2 * 2 * formValue.workStaminaCost) / workStaminaCost[0]) / 2)
+            const maxTimesOfSelected_3 =
+                formValue.staminaCostMultiplier >= 3 ? Math.floor(Math.ceil(consumedStaminaByWork / formValue.workStaminaCost) / 3) : 0;
+            for (let timesOfSelected_3 = maxTimesOfSelected_3; timesOfSelected_3 >= 0; timesOfSelected_3--) {
+                const maxTimesOf0_3 =
+                    formValue.staminaCostMultiplier >= 3
+                        ? Math.floor(Math.ceil((consumedStaminaByWork - timesOfSelected_3 * 3 * formValue.workStaminaCost) / workStaminaCost[0]) / 3)
                         : 0;
-                for (let timesOf0_2 = maxTimesOf0_2; timesOf0_2 >= 0; timesOf0_2--) {
+                for (let timesOf0_3 = maxTimesOf0_3; timesOf0_3 >= 0; timesOf0_3--) {
                     const ceiledValue = Math.ceil(
-                        (consumedStaminaByWork - timesOfSelected_2 * 2 * formValue.workStaminaCost - timesOf0_2 * 2 * workStaminaCost[0]) /
+                        (consumedStaminaByWork - timesOfSelected_3 * 3 * formValue.workStaminaCost - timesOf0_3 * 3 * workStaminaCost[0]) /
                             workStaminaCost[1]
                     );
-                    const maxTimesOf1_2 = formValue.staminaCostMultiplier >= 2 ? Math.floor(ceiledValue / 2) : 0;
-                    for (let timesOf1_2 = maxTimesOf1_2; timesOf1_2 >= 0; timesOf1_2--) {
-                        const maxTimesOfSelected_1 = Math.ceil(
+                    const maxTimesOf1_3 = formValue.staminaCostMultiplier >= 3 ? Math.floor(ceiledValue / 3) : 0;
+                    for (let timesOf1_3 = maxTimesOf1_3; timesOf1_3 >= 0; timesOf1_3--) {
+                        const maxTimesOfSelected_2 = Math.ceil(
                             (consumedStaminaByWork -
-                                timesOfSelected_2 * 2 * formValue.workStaminaCost -
-                                timesOf0_2 * 2 * workStaminaCost[0] -
-                                timesOf1_2 * 2 * workStaminaCost[1]) /
+                                timesOfSelected_3 * 3 * formValue.workStaminaCost -
+                                timesOf0_3 * 3 * workStaminaCost[0] -
+                                timesOf1_3 * 3 * workStaminaCost[1]) /
                                 formValue.workStaminaCost
                         );
-                        for (let timesOfSelected_1 = maxTimesOfSelected_1; timesOfSelected_1 >= 0; timesOfSelected_1--) {
-                            const maxTimesOf0_1 = Math.ceil(
+                        for (let timesOfSelected_2 = maxTimesOfSelected_2; timesOfSelected_2 >= 0; timesOfSelected_2--) {
+                            const maxTimesOf0_2 = Math.ceil(
                                 (consumedStaminaByWork -
-                                    timesOfSelected_2 * 2 * formValue.workStaminaCost -
-                                    timesOf0_2 * 2 * workStaminaCost[0] -
-                                    timesOf1_2 * 2 * workStaminaCost[1] -
-                                    timesOfSelected_1 * formValue.workStaminaCost) /
+                                    timesOfSelected_3 * 3 * formValue.workStaminaCost -
+                                    timesOf0_3 * 3 * workStaminaCost[0] -
+                                    timesOf1_3 * 3 * workStaminaCost[1] -
+                                    timesOfSelected_2 * formValue.workStaminaCost) /
                                     workStaminaCost[0]
                             );
-                            for (let timesOf0_1 = maxTimesOf0_1; timesOf0_1 >= 0; timesOf0_1--) {
-                                const maxTimesOf1_1 = Math.ceil(
+                            for (let timesOf0_2 = maxTimesOf0_2; timesOf0_2 >= 0; timesOf0_2--) {
+                                const maxTimesOf1_2 = Math.ceil(
                                     (consumedStaminaByWork -
-                                        timesOfSelected_2 * 2 * formValue.workStaminaCost -
-                                        timesOf0_2 * 2 * workStaminaCost[0] -
-                                        timesOf1_2 * 2 * workStaminaCost[1] -
-                                        timesOfSelected_1 * formValue.workStaminaCost -
-                                        timesOf0_1 * workStaminaCost[0]) /
+                                        timesOfSelected_3 * 3 * formValue.workStaminaCost -
+                                        timesOf0_3 * 3 * workStaminaCost[0] -
+                                        timesOf1_3 * 3 * workStaminaCost[1] -
+                                        timesOfSelected_2 * formValue.workStaminaCost -
+                                        timesOf0_2 * workStaminaCost[0]) /
                                         workStaminaCost[1]
                                 );
-                                for (let timesOf1_1 = maxTimesOf1_1; timesOf1_1 >= 0; timesOf1_1--) {
-                                    const earnedLiveTicket =
-                                        timesOfSelected_2 * 2 * formValue.workStaminaCost +
-                                        timesOf0_2 * 2 * workStaminaCost[0] +
-                                        timesOf1_2 * 2 * workStaminaCost[1] +
-                                        timesOfSelected_1 * formValue.workStaminaCost +
-                                        timesOf0_1 * workStaminaCost[0] +
-                                        timesOf1_1 * workStaminaCost[1];
-                                    if (earnedLiveTicket + formValue.liveTicket === consumedStaminaByWork) {
-                                        // チケット枚数が消費枚数と同じなら無駄ゼロ
-                                        workTimes.consumedStamina = earnedLiveTicket;
-                                        workTimes[formValue.workStaminaCost][2] = timesOfSelected_2;
-                                        workTimes[workStaminaCost[0]][2] = timesOf0_2;
-                                        workTimes[workStaminaCost[1]][2] = timesOf1_2;
-                                        workTimes[formValue.workStaminaCost][1] = timesOfSelected_1;
-                                        workTimes[workStaminaCost[0]][1] = timesOf0_1;
-                                        workTimes[workStaminaCost[1]][1] = timesOf1_1;
-                                        return workTimes;
-                                    }
-                                    if (earnedLiveTicket + formValue.liveTicket < consumedStaminaByWork) {
-                                        // チケット枚数が消費枚数未満なら達成不能
-                                        continue;
-                                    }
-                                    if (earnedLiveTicket < workTimes.consumedStamina) {
-                                        // チケット枚数が最小なら格納
-                                        workTimes.consumedStamina = earnedLiveTicket;
-                                        workTimes[formValue.workStaminaCost][2] = timesOfSelected_2;
-                                        workTimes[workStaminaCost[0]][2] = timesOf0_2;
-                                        workTimes[workStaminaCost[1]][2] = timesOf1_2;
-                                        workTimes[formValue.workStaminaCost][1] = timesOfSelected_1;
-                                        workTimes[workStaminaCost[0]][1] = timesOf0_1;
-                                        workTimes[workStaminaCost[1]][1] = timesOf1_1;
+                                for (let timesOf1_2 = maxTimesOf1_2; timesOf1_2 >= 0; timesOf1_2--) {
+                                    const maxTimesOfSelected_1 = Math.ceil(
+                                        (consumedStaminaByWork -
+                                            timesOfSelected_3 * 3 * formValue.workStaminaCost -
+                                            timesOf0_3 * 3 * workStaminaCost[0] -
+                                            timesOf1_3 * 3 * workStaminaCost[1] -
+                                            timesOfSelected_2 * 2 * formValue.workStaminaCost -
+                                            timesOf0_2 * 2 * workStaminaCost[0] -
+                                            timesOf1_2 * 2 * workStaminaCost[1]) /
+                                            formValue.workStaminaCost
+                                    );
+                                    for (let timesOfSelected_1 = maxTimesOfSelected_1; timesOfSelected_1 >= 0; timesOfSelected_1--) {
+                                        const maxTimesOf0_1 = Math.ceil(
+                                            (consumedStaminaByWork -
+                                                timesOfSelected_3 * 3 * formValue.workStaminaCost -
+                                                timesOf0_3 * 3 * workStaminaCost[0] -
+                                                timesOf1_3 * 3 * workStaminaCost[1] -
+                                                timesOfSelected_2 * 2 * formValue.workStaminaCost -
+                                                timesOf0_2 * 2 * workStaminaCost[0] -
+                                                timesOf1_2 * 2 * workStaminaCost[1] -
+                                                timesOfSelected_1 * formValue.workStaminaCost) /
+                                                workStaminaCost[0]
+                                        );
+                                        for (let timesOf0_1 = maxTimesOf0_1; timesOf0_1 >= 0; timesOf0_1--) {
+                                            const maxTimesOf1_1 = Math.ceil(
+                                                (consumedStaminaByWork -
+                                                    timesOfSelected_3 * 3 * formValue.workStaminaCost -
+                                                    timesOf0_3 * 3 * workStaminaCost[0] -
+                                                    timesOf1_3 * 3 * workStaminaCost[1] -
+                                                    timesOfSelected_2 * 2 * formValue.workStaminaCost -
+                                                    timesOf0_2 * 2 * workStaminaCost[0] -
+                                                    timesOf1_2 * 2 * workStaminaCost[1] -
+                                                    timesOfSelected_1 * formValue.workStaminaCost -
+                                                    timesOf0_1 * workStaminaCost[0]) /
+                                                    workStaminaCost[1]
+                                            );
+                                            for (let timesOf1_1 = maxTimesOf1_1; timesOf1_1 >= 0; timesOf1_1--) {
+                                                const earnedLiveTicket =
+                                                    timesOfSelected_3 * 3 * formValue.workStaminaCost +
+                                                    timesOf0_3 * 3 * workStaminaCost[0] +
+                                                    timesOf1_3 * 3 * workStaminaCost[1] +
+                                                    timesOfSelected_2 * 2 * formValue.workStaminaCost +
+                                                    timesOf0_2 * 2 * workStaminaCost[0] +
+                                                    timesOf1_2 * 2 * workStaminaCost[1] +
+                                                    timesOfSelected_1 * formValue.workStaminaCost +
+                                                    timesOf0_1 * workStaminaCost[0] +
+                                                    timesOf1_1 * workStaminaCost[1];
+                                                if (earnedLiveTicket + formValue.liveTicket === consumedStaminaByWork) {
+                                                    // チケット枚数が消費枚数と同じなら無駄ゼロ
+                                                    workTimes.consumedStamina = earnedLiveTicket;
+                                                    workTimes[formValue.workStaminaCost][3] = timesOfSelected_3;
+                                                    workTimes[workStaminaCost[0]][3] = timesOf0_3;
+                                                    workTimes[workStaminaCost[1]][3] = timesOf1_3;
+                                                    workTimes[formValue.workStaminaCost][2] = timesOfSelected_2;
+                                                    workTimes[workStaminaCost[0]][2] = timesOf0_2;
+                                                    workTimes[workStaminaCost[1]][2] = timesOf1_2;
+                                                    workTimes[formValue.workStaminaCost][1] = timesOfSelected_1;
+                                                    workTimes[workStaminaCost[0]][1] = timesOf0_1;
+                                                    workTimes[workStaminaCost[1]][1] = timesOf1_1;
+                                                    return workTimes;
+                                                }
+                                                if (earnedLiveTicket + formValue.liveTicket < consumedStaminaByWork) {
+                                                    // チケット枚数が消費枚数未満なら達成不能
+                                                    continue;
+                                                }
+                                                if (earnedLiveTicket < workTimes.consumedStamina) {
+                                                    // チケット枚数が最小なら格納
+                                                    workTimes.consumedStamina = earnedLiveTicket;
+                                                    workTimes[formValue.workStaminaCost][3] = timesOfSelected_3;
+                                                    workTimes[workStaminaCost[0]][3] = timesOf0_3;
+                                                    workTimes[workStaminaCost[1]][3] = timesOf1_3;
+                                                    workTimes[formValue.workStaminaCost][2] = timesOfSelected_2;
+                                                    workTimes[workStaminaCost[0]][2] = timesOf0_2;
+                                                    workTimes[workStaminaCost[1]][2] = timesOf1_2;
+                                                    workTimes[formValue.workStaminaCost][1] = timesOfSelected_1;
+                                                    workTimes[workStaminaCost[0]][1] = timesOf0_1;
+                                                    workTimes[workStaminaCost[1]][1] = timesOf1_1;
+                                                }
+                                            }
+                                        }
                                     }
                                 }
                             }
@@ -443,7 +493,10 @@
                     fixedWorkTimes[30][1] +
                     fixedWorkTimes[20][2] +
                     fixedWorkTimes[25][2] +
-                    fixedWorkTimes[30][2]);
+                    fixedWorkTimes[30][2] +
+                    fixedWorkTimes[20][3] +
+                    fixedWorkTimes[25][3] +
+                    fixedWorkTimes[30][3]);
             // 通常楽曲
             if (isWork) {
                 // チケットライブ
@@ -537,7 +590,12 @@
         let workTimesHtml = '';
         [20, 25, 30]
             .filter((cost) => {
-                return minResult[course].workTimes[cost][1] || minResult[course].workTimes[cost][2] || cost === formValue.workStaminaCost;
+                return (
+                    minResult[course].workTimes[cost][1] ||
+                    minResult[course].workTimes[cost][2] ||
+                    minResult[course].workTimes[cost][3] ||
+                    cost === formValue.workStaminaCost
+                );
             })
             .forEach((cost) => {
                 if (workTimesHtml) {
@@ -546,6 +604,9 @@
                 let text = Math.floor(minResult[course].workTimes[cost][formValue.staminaCostMultiplier]).toLocaleString();
                 if (formValue.staminaCostMultiplier === 2 && minResult[course].workTimes[cost][1]) {
                     text += `…${minResult[course].workTimes[cost][1]}`;
+                }
+                if (formValue.staminaCostMultiplier === 3 && (minResult[course].workTimes[cost][2] || minResult[course].workTimes[cost][1])) {
+                    text += `…${minResult[course].workTimes[cost][2] * 2 + minResult[course].workTimes[cost][1]}`;
                 }
                 workTimesHtml +=
                     `<label for="workStaminaCost${course}-${cost}">` +
@@ -605,11 +666,11 @@
         // 表中のラジオボタンに初期値セット
         const workStaminaCost =
             [formValue.workStaminaCost, 20, 25, 30].find((cost) => {
-                return minResult[course].workTimes[cost][1] || minResult[course].workTimes[cost][2];
+                return minResult[course].workTimes[cost][1] || minResult[course].workTimes[cost][2] || minResult[course].workTimes[cost][3];
             }) || formValue.workStaminaCost;
         $(`[name="workStaminaCost${course}"][value="${workStaminaCost}"]`).prop('checked', true);
         const itemCostMultiplier =
-            [10, 4, 2, 1].find((multiplier) => {
+            [1, 2, 4, 10].find((multiplier) => {
                 if (multiplier === 10) {
                     return formValue.todayRemainingTimes > 0 && minResult[course].eventTimes[multiplier];
                 }
@@ -815,9 +876,9 @@
         const formValue = getFormValue();
 
         formValue.liveTicket += formValue.inTable.workStaminaCost[course] * formValue.staminaCostMultiplier;
-        if (formValue.liveTicket > 500) {
-            if (confirm(`ライブチケットが${formValue.liveTicket - 500}枚超過します。\n超過分は加算されません。\n実行しますか？`)) {
-                formValue.liveTicket = 500;
+        if (formValue.liveTicket > 900) {
+            if (confirm(`ライブチケットが${formValue.liveTicket - 900}枚超過します。\n超過分は加算されません。\n実行しますか？`)) {
+                formValue.liveTicket = 900;
             } else {
                 return;
             }
